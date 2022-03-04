@@ -4,10 +4,40 @@
 #
 #######################################################
 
+from posixpath import split
+
+def main():
+    testurl()
+
 def urlchecker(url):
-
-    # your code should go here
-
+    urlList = url.split("://")
+    if urlList[1].count(':') > 1 or urlList[1].count('?') > 1 or urlList[1].count('#') > 1 or (" " in url):
+        return False
+    if urlList[0] != "http" and urlList[0] != "https":
+        return False
+    secondHalf = urlList[1]
+    if secondHalf == "" or not("/" in secondHalf):
+        return False
+    secondHalfList = secondHalf.split("/")
+    hostname = secondHalfList[0]
+    path = secondHalfList[1]
+    if ":" in hostname:
+        hostList =  hostname.split(":")
+        port = hostList[1]
+        name = hostList[0]
+        if name == "":
+            return False
+        if not (port.isdigit() or port == ""):
+            return False
+    else:
+        if hostname == "":
+            return False
+    if path != "":
+        if "#" in url and "?" in url:  
+            if url.find("#") > url.find("?"):
+                return False
+    if ":" in path: #colon can only be in hostname
+        return False
     return True
 
 
@@ -34,7 +64,11 @@ def testurl():
     ]
     for url,expected in urls:
         if urlchecker(url) != expected:
-            print(f"{url} is not valid, but your function claimed the opposite")
+            print("This " + url + " is not valid, but your function claimed the opposite")
         else:
-            print(f"{url} - ok")
+            print( url + " ok")
+
+
+if __name__ == "__main__":
+    main()
 
